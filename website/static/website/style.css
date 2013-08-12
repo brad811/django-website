@@ -1,0 +1,38 @@
+body {
+	background-color: #eee;
+	padding-top: 40px;
+	padding-bottom: 40px;
+}
+
+.error {
+	color: #e00;
+	border: 1px solid red;
+	background-color: #fdd;
+	padding: 3px 5px;
+	margin: 10px 0 0 0;
+	display: none;
+}
+
+#login_form, #registration_form {
+	max-width: 300px;
+	background: #fff;
+	border-radius: 5px;
+	margin: 0 auto 20px;
+	padding: 12px;
+	border: 1px solid #ccc;
+}
+
+#login_form h3, #registration_form h3 {
+	margin: 0;
+	padding: 0;
+	line-height: 30px;
+	padding-bottom: 10px;
+}
+
+#login_form .flex-table {
+	width: 100%;
+}
+
+#login_form .flex-table-secondary {
+	vertical-align: top;
+}

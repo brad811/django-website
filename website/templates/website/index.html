@@ -1,0 +1,51 @@
+{% load staticfiles %}
+{% include 'website/header.html' %}
+
+	<br />
+	<div style="float: left;">
+	Users:
+	{% if users_list %}
+		<ul>
+		{% for user in users_list %}
+			<li>{{ user.name }}</li>
+		{% endfor %}
+		</ul>
+	{% else %}
+		<p>No users are available.</p>
+	{% endif %}
+	</div>
+
+	<form id="login_form" action="{% url 'index' %}" method="post">
+	{% csrf_token %}
+		<h3>Login</h3>
+		<input name="login_email" id="login_email" class="input-block-level" type="text" placeholder="Email">
+		<table class="flex-table">
+			<tr>
+				<td class="flex-table-primary">
+					<input name="login_password" id="login_password" class="flex-table-form" type="password" placeholder="Password">
+				</td>
+				<td class="flex-table-secondary">
+					<button type="submit" class="btn flex-table-btn">Login</button>
+				</td>
+			</tr>
+		</table>
+		<label class="checkbox pull-left">
+			<input type="checkbox" value="remember-me"> Remember me
+		</label>
+		<a href="#" class="pull-right">Forgot password?</a>
+		<div style="clear: both;"></div>
+		<div class="error" id="login_error"></div>
+	</form>
+	
+	<form id="registration_form" action="{% url 'index' %}" method="post">
+	{% csrf_token %}
+		<h3>Sign Up</h3>
+		<input type="text" name="signup_name" id="signup_name" class="input-block-level" placeholder="Name" />
+		<input type="text" name="signup_email" id="signup_email" class="input-block-level" placeholder="Email" />
+		<input type="password" name="signup_password" id="signup_password" class="input-block-level" placeholder="Password" />
+		<input type="submit" class="btn btn-primary pull-right" value="Sign Up" />
+		<div style="clear: both;"></div>
+		<div class="error" id="registration_error"></div>
+	</form>
+
+{% include 'website/footer.html' %}

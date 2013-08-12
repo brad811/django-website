@@ -1,0 +1,18 @@
+{% load staticfiles %}
+{% include 'website/header.html' %}
+
+	<br />
+	You are home. <a href="{% url 'logout' %}">Logout</a><br />
+	<br />
+	Users:
+	{% if users_list %}
+		<ul>
+		{% for user in users_list %}
+			<li>{{ user.name }}</li>
+		{% endfor %}
+		</ul>
+	{% else %}
+		<p>No users are available.</p>
+	{% endif %}
+
+{% include 'website/footer.html' %}
