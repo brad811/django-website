@@ -38,8 +38,6 @@ def login(request):
 	response = validate_login(request)
 	
 	if response.content == "valid":
-		# check if "remember me" was checked in the future
-		# , httponly=True
 		user = User.objects.get(email=request.POST.get('login_email',''))
 		value = str(user.id) + ',' + hashlib.sha256(user.password).hexdigest()
 		
