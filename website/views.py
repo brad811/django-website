@@ -2,7 +2,6 @@ from django.shortcuts import render
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
 from django.contrib import auth
-from django.contrib.sessions.models import Session
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import AnonymousUser
 
@@ -36,6 +35,11 @@ def login(request):
 		return HttpResponse("error,You forgot to enter a password!")
 	
 	user = User.objects.authenticate(email=login_email, password=login_password)
+	
+	if request.POST.get('remember_me','false') == "true":
+		request.session.set_expiry(3600*24*30)
+	else:
+		request.session.set_expiry(0)
 	
 	if user is None:
 		return HttpResponse("error,The email or password you entered was incorrect!")
