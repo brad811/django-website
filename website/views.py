@@ -8,12 +8,7 @@ from django.contrib.auth.models import AnonymousUser
 from website.models import User
 
 def index(request):
-	try:
-		request.user = User.objects.get(pk=request.session.get('_auth_user_id'))
-	except User.DoesNotExist:
-		request.user = AnonymousUser()
-	
-	if request.user.is_authenticated():
+	if get_user(request).is_authenticated():
 		return render(request, 'website/home.html', {
 			'users_list': User.objects.all(),
 		})
@@ -71,3 +66,11 @@ def register(request):
 	newRequest.POST['login_password'] = signup_password
 	
 	return login(newRequest)
+
+def get_user(request):
+	try:
+		user = User.objects.get(pk=request.session.get('_auth_user_id'))
+	except User.DoesNotExist:
+		user = AnonymousUser()
+	
+	return user
