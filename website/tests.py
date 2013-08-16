@@ -7,9 +7,9 @@ import re
 
 """
 Missing tests:
-	- Test is_logged_in function
 	- Test that index function renders home.html if logged in
 	- Test that index function renders index.html if not logged in
+	- Test decorator functions
 """
 
 class RegisterTest(TestCase):
@@ -19,7 +19,7 @@ class RegisterTest(TestCase):
 		"""
 		c = Client()
 		response = c.post('/register/', {'signup_email': '', 'signup_password': '12345678', 'signup_name': 'Sample Person'})
-		self.assertEqual(response.content, "error,You must enter an email address.")
+		self.assertEqual(response.content, "error,You forgot to enter an email address!")
 	
 	def test_invalid_email(self):
 		"""
@@ -35,6 +35,7 @@ class RegisterTest(TestCase):
 		"""
 		c = Client()
 		c.post('/register/', {'signup_email': 'valid.email@website.com', 'signup_password': '12345678', 'signup_name': 'Sample Person'})
+		c.post('/logout/')
 		response = c.post('/register/', {'signup_email': 'valid.email@website.com', 'signup_password': '12345678', 'signup_name': 'Sample Person 2'})
 		self.assertEqual(response.content, "error,The email address entered is already registered.")
 	
@@ -52,7 +53,7 @@ class RegisterTest(TestCase):
 		"""
 		c = Client()
 		response = c.post('/register/', {'signup_email': 'valid.email@website.com', 'signup_password': '12345678', 'signup_name': ''})
-		self.assertEqual(response.content, "error,You must enter a name.")
+		self.assertEqual(response.content, "error,You forgot to enter a name!")
 	
 	def test_valid_registration(self):
 		"""
@@ -69,6 +70,7 @@ class LoginValidationTest(TestCase):
 		"""
 		c = Client()
 		c.post('/register/', {'signup_email': 'email@website.com', 'signup_password': '12345678', 'signup_name': 'Sample Person'})
+		c.post('/logout/')
 		response = c.post('/login/', {'login_email': 'email@website.com', 'login_password': '1234567'})
 		self.assertEqual(response.content, "error,The email or password you entered was incorrect!")
 	
@@ -78,6 +80,7 @@ class LoginValidationTest(TestCase):
 		"""
 		c = Client()
 		c.post('/register/', {'signup_email': 'email@website.com', 'signup_password': '12345678', 'signup_name': 'Sample Person'})
+		c.post('/logout/')
 		response = c.post('/login/', {'login_email': 'wrong_email@website.com', 'login_password': '12345678'})
 		self.assertEqual(response.content, "error,The email or password you entered was incorrect!")
 	
@@ -103,6 +106,7 @@ class LoginValidationTest(TestCase):
 		"""
 		c = Client()
 		c.post('/register/', {'signup_email': 'email@website.com', 'signup_password': '12345678', 'signup_name': 'Sample Person'})
+		c.post('/logout/')
 		response = c.post('/login/', {'login_email': 'email@website.com', 'login_password': '12345678'})
 		self.assertEqual(response.content, "valid")
 	
@@ -113,7 +117,10 @@ class LogoutTest(TestCase):
 		"""
 		c = Client()
 		response = c.post('/logout/')
-		self.assertEqual(str(response.client.cookies.items()[0]), "('user', <Morsel: user=''>)")
+		cookie_str = str(response.client.cookies.items()[0]).split('\'')
+		self.assertEqual(cookie_str[0]+"'"+cookie_str[1]+"'"+cookie_str[2], "('sessionid', <Morsel: sessionid=")
+		self.assertEqual(len(cookie_str[3]), 32)
+		self.assertEqual(cookie_str[4], '>)')
 	
 	def test_logout_redirects_to_index(self):
 		"""
