@@ -10,15 +10,21 @@ def index(request):
 	if get_user(request).is_authenticated():
 		return render(request, 'website/home.html', {
 			'users_list': User.objects.all(),
+			'is_logged_in': True,
+			'current_page': 'home',
 		})
 	else:
 		return render(request, 'website/index.html', {
 			'users_list': User.objects.all(),
+			'is_logged_in': False,
 		})
 
 @login_required()
 def settings(request):
-	return render(request, 'website/settings.html')
+	return render(request, 'website/settings.html', {
+		'is_logged_in': True,
+		'current_page': 'settings',
+	})
 
 @post_required()
 @anonymous_required()
